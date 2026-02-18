@@ -23,7 +23,7 @@ def get_text_chunks(raw_text):
     return chunks
 
 
- def get_vector_store(text_chunks):
+def get_vector_store(text_chunks):
     embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
@@ -54,7 +54,7 @@ def main():
         
          text_chunks=get_text_chunks(raw_text)
          
-         get_vector_store(text_chunks)
+         vector_store=get_vector_store(text_chunks)
          st.success("Vector store created successfully!")
 
 
