@@ -36,6 +36,21 @@ def main():
         
          text_chunks=get_text_chunks(raw_text)
          st.write(text_chunks)
+
+         def get_vector_store(text_chunks):
+    
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    vector_store = Chroma.from_texts(
+        texts=text_chunks,
+        embedding=embeddings,
+        persist_directory="chroma_db"
+    )
+
+    vector_store.persist()
+
          
 if __name__ == "__main__":
   main()
