@@ -2,6 +2,9 @@ import streamlit as st
 from pypdf import PdfReader
 from dotenv import load_dotenv
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
 
 
 def get_pdf_text(pdf_docs):
@@ -18,6 +21,21 @@ def get_text_chunks(raw_text):
     )
     chunks=text_splitter.split_text(raw_text)
     return chunks
+
+
+ def get_vector_store(text_chunks):
+    embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    vector_store = Chroma.from_texts(
+        texts=text_chunks,
+        embedding=embeddings,
+        persist_directory="chroma_db"
+    )
+
+    vector_store.persist()
+
   
 def main():
     load_dotenv()
@@ -35,22 +53,12 @@ def main():
          raw_text=get_pdf_text(pdf_docs)
         
          text_chunks=get_text_chunks(raw_text)
-         st.write(text_chunks)
+         
+         get_vector_store(text_chunks)
+         st.success("Vector store created successfully!")
 
-         def get_vector_store(text_chunks):
-    
-    embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
-    )
 
-    vector_store = Chroma.from_texts(
-        texts=text_chunks,
-        embedding=embeddings,
-        persist_directory="chroma_db"
-    )
-
-    vector_store.persist()
-
+         
          
 if __name__ == "__main__":
   main()
