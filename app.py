@@ -5,22 +5,12 @@ import streamlit as st
 from pypdf import PdfReader
 from typing import Any, Dict, Optional, List
 
-# Try to import community packages first to avoid deprecation warnings; fall back to core langchain.
-try:
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
-    from langchain_community.embeddings import HuggingFaceEmbeddings  # preferred
-    from langchain_community.vectorstores import Chroma  # preferred
-    from langchain.chains import ConversationalRetrievalChain
-    from langchain_huggingface import HuggingFaceEndpoint
-    from langchain.schema import Document
-except Exception:
-    # fallback (older langchain versions)
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
-    from langchain.embeddings import HuggingFaceEmbeddings
-    from langchain.vectorstores import Chroma
-    from langchain.chains import ConversationalRetrievalChain
-    from langchain_huggingface import HuggingFaceEndpoint
-    from langchain.schema import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+from langchain.chains import ConversationalRetrievalChain
+from langchain_huggingface import HuggingFaceEndpoint
+from langchain.schema import Document
 
 
 # ----------------------------
