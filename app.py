@@ -156,29 +156,22 @@ def invoke_chain_safely(chain: Any, question: str, chat_history: List = None) ->
     # Preferred: pass a dict with the expected keys.
     try:
         if hasattr(chain, "invoke"):
-            # Many Runnable/Chain implementations support .invoke(input_dict)
-            return chain.invoke({"question": question, "chat_history": chat_history})
+            # ConversationalRetrievalChain expects 'input' and 'chat_history'
+            return chain.invoke({"input": question, "chat_history": chat_history})
     except Exception as e:
         last_exc = e
 
     # Try calling the chain like a callable (some LangChain versions)
     try:
-        return chain({"question": question, "chat_history": chat_history})
+        return chain({"input": question, "chat_history": chat_history})
     except Exception as e:
         last_exc = e
 
     # Fallback to .run (returns str typically) but wrap it into dict for consistency
     try:
         if hasattr(chain, "run"):
-            run_out = chain.run(question)
+            run_out = chain.run({"input": question, "chat_history": chat_history})
             return {"answer": run_out}
-    except Exception as e:
-        last_exc = e
-
-    # Last attempt: try invoke with alternative key name (rare)
-    try:
-        if hasattr(chain, "invoke"):
-            return chain.invoke({"input": question})
     except Exception as e:
         last_exc = e
 
